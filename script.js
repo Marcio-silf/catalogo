@@ -56,7 +56,7 @@ function exibirProdutosPorDepartamento(produtos) {
             divProduto.innerHTML = `
                 <img src="imagens/${produto.Imagem}" alt="${produto.Nome}">
                 <h3>${produto.Nome}</h3>
-                <p>${produto.Descrição || "Sem descrição disponível"}</p>`;
+                `;
             divProdutos.appendChild(divProduto);
         });
 
@@ -99,7 +99,7 @@ function adicionarBotaoWhatsApp() {
 
         // Cria o link do WhatsApp
         const linkWhatsApp = document.createElement("a");
-        linkWhatsApp.href = "https://wa.me/3121047750"; // Substitua pelo seu número de WhatsApp
+        linkWhatsApp.href = "https://wa.me/31972132922"; // Substitua pelo seu número de WhatsApp
         linkWhatsApp.target = "_blank";
         linkWhatsApp.className = "gen123 bottom right";
 

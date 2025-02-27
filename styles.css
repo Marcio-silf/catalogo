@@ -79,7 +79,7 @@ header h1 {
 }
 
 .produto img {
-    width: 300px;
+    width: 250px;
     height: 300px;
     object-fit: contain;
     background-color: #f8f8f8;

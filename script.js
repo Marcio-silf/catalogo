@@ -1,7 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Adiciona o snippet do Google Tag Manager
+    adicionarGoogleTagManager();
+
     carregarExcelAutomaticamente();
     adicionarBotaoWhatsApp(); // Chama a função para adicionar o botão do WhatsApp
 });
+
+function adicionarGoogleTagManager() {
+    const gtmScript = document.createElement("script");
+    gtmScript.innerHTML = `
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-PVSGK549');
+    `;
+    document.head.appendChild(gtmScript);
+
+    // Adiciona o iframe do GTM (parte do snippet que vai no <body>)
+    const gtmIframe = document.createElement("noscript");
+    gtmIframe.innerHTML = `
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PVSGK549"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    `;
+    document.body.insertBefore(gtmIframe, document.body.firstChild);
+}
 
 function carregarExcelAutomaticamente() {
     const caminhoDoArquivo = "catalogo_produtos.xlsx"; // Caminho relativo ao arquivo Excel

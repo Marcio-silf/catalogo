@@ -12,25 +12,27 @@ header {
     background-color: #020d3f;
     color: #fff;
     padding: 20px;
-    text-align: center;
     position: sticky;
     top: 0;
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap; /* Permite que os elementos quebrem para a próxima linha em telas pequenas */
+    flex-wrap: nowrap; /* Impede que os itens quebrem para uma nova linha */
+    gap: 10px;
+    text-align: center;
 }
 
 header img {
-    height: 150px; /* Tamanho padrão da imagem */
-    margin-right: 20px; /* Espaçamento entre a imagem e o título */
+    height: 150px;
+    flex-shrink: 0; /* Impede que a imagem diminua */
 }
 
 header h1 {
     margin: 0;
-    font-size: 35px;
-    width: calc(35% - 30px); /* Largura ajustada para o título */
+    font-size: clamp(20px, 5vw, 35px); /* Ajusta o tamanho do título dinamicamente */
+    white-space: nowrap; /* Impede que o título quebre em várias linhas */
+    text-align: center;
 }
 
 .catalogo {
@@ -56,15 +58,14 @@ header h1 {
     gap: 20px;
     margin-top: 20px;
     align-items: center;
-    justify-content: center; /* Centraliza os produtos */
-    
+    justify-content: center;
 }
 
 .produto {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: calc(25% - 20px); /* 4 produtos por linha em telas grandes */
+    width: calc(25% - 20px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.2s;
@@ -99,7 +100,7 @@ header h1 {
 }
 
 footer {
-    background-color: #020d3f;
+    background-color: #333;
     color: #fff;
     padding: 20px;
     text-align: center;
@@ -123,7 +124,7 @@ footer .ecommerce {
 }
 
 footer .ecommerce a {
-    color: #19f105;
+    color: #4CAF50;
     text-decoration: none;
     font-size: 14px;
 }
@@ -131,43 +132,28 @@ footer .ecommerce a {
 footer .ecommerce a:hover {
     text-decoration: underline;
 }
-/* Ajustes para telas menores */
+
 @media (max-width: 1200px) {
     .produto {
-        width: calc(33.33% - 20px); /* 3 produtos por linha */
+        width: calc(33.33% - 20px);
     }
 }
 
-@media (max-width: 768px) {
-    .produto {
-        width: calc(50% - 20px); /* 2 produtos por linha */
-    }
-}
-
-@media (max-width: 480px) {
-    .produto {
-        width: 100%; /* 1 produto por linha */
-    }
-}
-/* Ajustes para telas menores */
 @media (max-width: 768px) {
     header {
-        flex-direction: column; /* Coloca a imagem e o título em coluna */
+        padding: 10px; /* Reduz o padding para economizar espaço */
     }
 
     header img {
         height: 100px; /* Reduz o tamanho da imagem */
-        margin-right: 0; /* Remove o espaçamento à direita */
-        margin-bottom: 10px; /* Adiciona espaçamento abaixo da imagem */
     }
 
     header h1 {
-        font-size: 18px; /* Reduz o tamanho da fonte do título */
-        width: 100%; /* Ocupa toda a largura */
+        font-size: clamp(18px, 4vw, 28px); /* Ajusta o tamanho do título */
     }
 
     .produto {
-        width: calc(33.33% - 20px); /* Ajusta a largura dos produtos */
+        width: calc(50% - 20px);
     }
 
     footer {
@@ -183,14 +169,14 @@ footer .ecommerce a:hover {
 
 @media (max-width: 480px) {
     header img {
-        height: 80px; /* Tamanho ainda menor para telas muito pequenas */
+        height: 80px; /* Reduz ainda mais o tamanho da imagem */
     }
 
     header h1 {
-        font-size: 24px; /* Fonte menor para telas muito pequenas */
+        font-size: clamp(16px, 3.5vw, 24px); /* Ajusta o tamanho do título */
     }
 
     .produto {
-        width: 100%; /* Produtos ocupam toda a largura */
+        width: 100%;
     }
 }

@@ -13,14 +13,14 @@ function adicionarGoogleTagManager() {
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-PVSGK549');
+        })(window,document,'script','dataLayer','GTM-NGQWX2NM');
     `;
     document.head.appendChild(gtmScript);
 
     // Adiciona o iframe do GTM (parte do snippet que vai no <body>)
     const gtmIframe = document.createElement("noscript");
     gtmIframe.innerHTML = `
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PVSGK549"
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NGQWX2NM"
         height="0" width="0" style="display:none;visibility:hidden"></iframe>
     `;
     document.body.insertBefore(gtmIframe, document.body.firstChild);

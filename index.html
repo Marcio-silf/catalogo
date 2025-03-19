@@ -3,31 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Produtos  Ampa Food</title>
+    <title>Catálogo de Produtos Ampa Food</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <img src="logo.png" alt="Logo Ampa Food" class="logo">
-        <h1>Catálogo de Produtos - Ampa Food</h1>
+        <div class="header-top">
+            <img src="logo.png" alt="Logo Ampa Food" class="logo">
+            <div class="header-content">
+                <h1>Catálogo - AMPAFOOD</h1>
+                <div class="filtro-container">
+                    <div class="buscador">
+                        <input type="text" placeholder="Buscar...">
+                        <button>
+                            <svg><!-- Ícone de busca --></svg>
+                        </button>
+                    </div>
+
+                    <!-- Botão de alternância (visível apenas em telas pequenas) -->
+                    <button id="menu-toggle" class="menu-toggle">☰</button>
+
+                    <!-- Lista de departamentos (visível apenas em telas grandes) -->
+                    <select id="lista-departamentos" class="listbox">
+                        <option value="">Todos os departamentos</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+       
+        <div class="departamento-fixo">
+            <div class="departamento-coluna">
+                <h2>Departamentos</h2>
+            </div>
+        </div>
     </header>
 
-    <section class="catalogo" id="catalogo">
-        <!-- Os departamentos e produtos serão inseridos aqui via JavaScript -->
-    </section>
+    <!-- Menu lateral com as opções (visível apenas em telas pequenas) -->
+    <div id="sidebar" class="sidebar">
+        <ul id="lista-departamentos-sidebar"></ul>
+    </div>
+
+    <div class="catalogo-container">
+        <!-- Grade de produtos -->
+        <div class="grade-produtos" id="grade-produtos">
+            <!-- Os produtos serão inseridos aqui via JavaScript -->
+        </div>
+    </div>
 
     <footer>
         <div class="contato">
-            <p>VJR Distribuidora e Importadora de Alimentos LTDA
-                CNPJ 37.636.249/0001-06
-                Endereço: Rua Capricórnio, 242, Jardim Riacho das Pedras, Contagem – MG</p>
-            
+            <p>VJR Distribuidora e Importadora de Alimentos LTDA</p>
+            <p>CNPJ 37.636.249/0001-06</p>
+            <p>Endereço: Rua Capricórnio, 242, Jardim Riacho das Pedras, Contagem – MG</p>
         </div>
         <div class="ecommerce">
             <a href="https://ampafood.com.br/ofertas" target="_blank">Visite nosso e-commerce</a>
         </div>
     </footer>
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="script.js"></script>
 </body>

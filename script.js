@@ -1,10 +1,35 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Adiciona o snippet do Google Tag Manager
-    adicionarGoogleTagManager();
+    // Referências aos elementos
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+
+    // Função para alternar a visibilidade do sidebar
+    function toggleSidebar() {
+        if (sidebar.style.display === 'block') {
+            sidebar.style.display = 'none'; // Oculta o sidebar
+        } else {
+            sidebar.style.display = 'block'; // Exibe o sidebar
+        }
+    }
+
+    // Adiciona o evento de clique ao botão de alternância
+    menuToggle.addEventListener('click', toggleSidebar);
+
+    // Monitora o redimensionamento da tela
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 768) {
+            sidebar.style.display = 'none'; // Garante que o sidebar esteja oculto em telas grandes
+        }
+    });
+
+    // Garante que o sidebar esteja oculto ao carregar a página
+    sidebar.style.display = 'none';
 
     carregarExcelAutomaticamente();
-    adicionarBotaoWhatsApp(); // Chama a função para adicionar o botão do WhatsApp
+    adicionarBotaoWhatsApp();
 });
+
+
 
 function adicionarGoogleTagManager() {
     const gtmScript = document.createElement("script");
@@ -26,8 +51,9 @@ function adicionarGoogleTagManager() {
     document.body.insertBefore(gtmIframe, document.body.firstChild);
 }
 
+
 function carregarExcelAutomaticamente() {
-    const caminhoDoArquivo = "catalogo_produtos.xlsx"; // Caminho relativo ao arquivo Excel
+    const caminhoDoArquivo = "catalogo_produtos.xlsx";
 
     fetch(caminhoDoArquivo)
         .then((response) => {
@@ -40,53 +66,127 @@ function carregarExcelAutomaticamente() {
             const workbook = XLSX.read(new Uint8Array(data), { type: "array" });
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             const produtos = XLSX.utils.sheet_to_json(sheet);
-            exibirProdutosPorDepartamento(produtos);
+            exibirProdutos(produtos); // Exibe todos os produtos
+            preencherListaDepartamentos(produtos); // Preenche a lista de departamentos
+            configurarFiltroDepartamento(produtos); // Configura o filtro por departamento
+            configurarBuscaDinamica(produtos); // Configura a busca dinâmica
+            configurarOrdenacao(produtos); // Configura a ordenação
         })
         .catch((error) => {
             console.error("Erro ao carregar o arquivo Excel:", error);
         });
 }
 
-function exibirProdutosPorDepartamento(produtos) {
-    const catalogo = document.getElementById("catalogo");
-    catalogo.innerHTML = ""; // Limpa antes de adicionar novos produtos
+function exibirProdutos(produtos) {
+    const gradeProdutos = document.getElementById("grade-produtos");
+    gradeProdutos.innerHTML = "";
 
-    // Agrupa produtos por departamento
-    const produtosPorDepartamento = produtos.reduce((acc, produto) => {
-        const departamento = produto.Departamento || "Outros";
-        if (!acc[departamento]) {
-            acc[departamento] = [];
-        }
-        acc[departamento].push(produto);
-        return acc;
-    }, {});
-
-    // Exibe os produtos por departamento
-    for (const [departamento, produtos] of Object.entries(produtosPorDepartamento)) {
-        const divDepartamento = document.createElement("div");
-        divDepartamento.classList.add("departamento");
-
-        const tituloDepartamento = document.createElement("h2");
-        tituloDepartamento.textContent = departamento;
-        divDepartamento.appendChild(tituloDepartamento);
-
-        const divProdutos = document.createElement("div");
-        divProdutos.classList.add("produtos-container");
-
-        produtos.forEach((produto) => {
-            const divProduto = document.createElement("div");
-            divProduto.classList.add("produto");
-            divProduto.innerHTML = `
-                <img src="imagens/${produto.Imagem}" alt="${produto.Nome}">
-                <h3>${produto.Nome}</h3>
-                `;
-            divProdutos.appendChild(divProduto);
-        });
-
-        divDepartamento.appendChild(divProdutos);
-        catalogo.appendChild(divDepartamento);
-    }
+    produtos.forEach((produto) => {
+        const divProduto = document.createElement("div");
+        divProduto.classList.add("produto");
+        divProduto.innerHTML = `
+            <img src="imagens/${produto.Imagem}" alt="${produto.Nome}">
+            <h3>${produto.Nome}</h3>
+            <p>${produto.Departamento}</p>
+        `;
+        gradeProdutos.appendChild(divProduto);
+    });
 }
+
+function preencherListaDepartamentos(produtos) {
+    const listaDepartamentos = document.getElementById("lista-departamentos");
+    const listaDepartamentosSidebar = document.getElementById("lista-departamentos-sidebar");
+    const departamentos = [...new Set(produtos.map(produto => produto.Departamento || "Outros"))];
+
+    // Limpa as listas antes de preencher
+    listaDepartamentos.innerHTML = '<option value="">Todos os departamentos</option>';
+    listaDepartamentosSidebar.innerHTML = '<li data-value="">Todos os departamentos</li>';
+
+    departamentos.forEach(departamento => {
+        // Adiciona opção à ListBox
+        const option = document.createElement("option");
+        option.value = departamento;
+        option.textContent = departamento;
+        listaDepartamentos.appendChild(option);
+
+        // Adiciona opção ao menu lateral
+        const li = document.createElement("li");
+        li.textContent = departamento;
+        li.setAttribute("data-value", departamento);
+        listaDepartamentosSidebar.appendChild(li);
+    });
+
+    // Adiciona evento de clique ao menu lateral
+    listaDepartamentosSidebar.addEventListener("click", function (event) {
+        if (event.target.tagName === "LI") {
+            const departamentoSelecionado = event.target.getAttribute("data-value");
+            listaDepartamentos.value = departamentoSelecionado;
+            listaDepartamentos.dispatchEvent(new Event("change")); // Dispara o evento de mudança
+
+            // Oculta o sidebar após a seleção
+            const sidebar = document.getElementById('sidebar');
+            sidebar.style.display = 'none';
+        }
+    });
+}
+
+function configurarFiltroDepartamento(produtos) {
+    const listaDepartamentos = document.getElementById("lista-departamentos");
+    const departamentoColuna = document.querySelector(".departamento-coluna h2");
+
+    listaDepartamentos.addEventListener("change", function () {
+        const departamentoSelecionado = this.value;
+
+        // Atualiza o nome do departamento na coluna
+        if (departamentoSelecionado) {
+            departamentoColuna.textContent = departamentoSelecionado;
+        } else {
+            departamentoColuna.textContent = "Todos os departamentos";
+        }
+
+        // Filtra os produtos
+        const produtosFiltrados = departamentoSelecionado
+            ? produtos.filter(produto => produto.Departamento === departamentoSelecionado)
+            : produtos;
+
+        // Exibe os produtos filtrados
+        exibirProdutos(produtosFiltrados);
+    });
+}
+
+function configurarBuscaDinamica(produtos) {
+    const campoBusca = document.querySelector(".buscador input");
+
+    campoBusca.addEventListener("input", () => {
+        const termoBusca = campoBusca.value.toLowerCase();
+        const produtosFiltrados = produtos.filter(produto =>
+            produto.Nome.toLowerCase().includes(termoBusca) ||
+            produto.Departamento.toLowerCase().includes(termoBusca)
+        );
+        exibirProdutos(produtosFiltrados);
+    });
+}
+
+function configurarOrdenacao(produtos) {
+    const ordenarProdutos = document.getElementById("ordenar-produtos");
+
+    ordenarProdutos.addEventListener("change", function () {
+        const ordem = this.value;
+        let produtosOrdenados;
+
+        if (ordem === "az") {
+            // Ordena de A-Z
+            produtosOrdenados = produtos.sort((a, b) => a.Nome.localeCompare(b.Nome));
+        } else if (ordem === "za") {
+            // Ordena de Z-A
+            produtosOrdenados = produtos.sort((a, b) => b.Nome.localeCompare(a.Nome));
+        }
+
+        // Exibe os produtos ordenados
+        exibirProdutos(produtosOrdenados);
+    });
+}
+
 
 function adicionarBotaoWhatsApp() {
     setTimeout(function () {
